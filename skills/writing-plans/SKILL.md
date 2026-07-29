@@ -71,10 +71,6 @@ docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md
 
 **Tech Stack：**[关键技术与 libraries]
 
-## Global Constraints
-
-[从 spec 复制项目级约束，并保留精确值。]
-
 ---
 ```
 
