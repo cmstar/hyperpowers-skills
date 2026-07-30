@@ -1,6 +1,6 @@
 # Hyperpowers Wiki
 
-本文档说明 Hyperpowers 与原版 [Superpowers](https://github.com/obra/superpowers) 的主要差异、五个保留技能的调整原因，以及精简版的完整工作流程。
+本文档说明 Hyperpowers 与原版 [Superpowers](https://github.com/obra/superpowers) 的主要差异、五个保留核心技能的调整原因、独立辅助技能，以及精简版的完整工作流程。
 
 ## 项目定位
 
@@ -13,6 +13,8 @@ Hyperpowers 只保留其中五个核心能力：
 3. 执行 spec 或 plan；
 4. 使用 TDD 编写代码；
 5. 编写和验证 Skill。
+
+此外，Hyperpowers 提供独立辅助技能 `git-auto-commit`，用于根据当前提交范围、项目规则和近期历史生成提交信息并创建 Git commit。
 
 精简不只是删除目录，还包括重新定义技能之间的调用关系。保留的 Skill 都是完整、可独立使用的能力，而不是必须依赖整套工作流才能运行的中间步骤。
 
@@ -207,6 +209,20 @@ brainstorming 的价值在于澄清和审阅，不在于替用户决定下一步
 **为什么这样调整**
 
 Skill 是行为程序，需要通过真实行为测试验证；但测试方法不应绑定某一种调度实现。完成 Skill 编写也不等于获得发布或提交授权。
+
+## 辅助技能
+
+### `git-auto-commit`
+
+`git-auto-commit` 负责：
+
+- 只选择当前任务、当前会话或用户明确指定的修改；
+- 优先遵守项目提交规则，再用近期历史补全提交语言和标题风格；
+- 在没有规则和历史时默认使用英文 Conventional Commits；
+- 根据实际改动判断是否需要 Body 或 breaking change 信息；
+- 暂存已确认的范围并创建一次 Git commit。
+
+它只接受对 `git-auto-commit` 的明确调用。普通提交请求不会触发它；当前版本也没有把它接入其他技能或精简版主工作流程。
 
 ## 技能之间的关系
 

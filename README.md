@@ -43,6 +43,14 @@ Hyperpowers 与原版 Superpowers 不能同时安装。两者包含多个同名 
 | `test-driven-development` | 使用 RED–GREEN–REFACTOR 循环执行代码变更，并保护 legacy code 与用户已有修改。 |
 | `writing-skills` | 使用 fresh-context 行为测试创建、更新和验证 Agent Skills。 |
 
+## 辅助技能
+
+| Skill | 核心功能 |
+|---|---|
+| `git-auto-commit` | 根据当前提交范围、项目规则和近期历史生成提交信息，并创建一次 Git commit。 |
+
+`git-auto-commit` 是独立的显式调用技能，目前不属于精简版主工作流程，也不会由其他技能自动调用。
+
 ## 基本思路
 
 所有 Skills 都只接受肯定、明确的调用。以下情况不会触发 Skill：
@@ -79,6 +87,8 @@ Hyperpowers 与原版 Superpowers 不能同时安装。两者包含多个同名 
 > 编码过程使用 `test-driven-development`。
 
 > /writing-skills 创建一个新的 Skill ，功能是 …… 。
+
+> 使用 `git-auto-commit` 提交当前任务的改动。
 
 如果没有明确点名，Agent 应按普通模式处理任务，不加载本项目定义的 Skill 工作流。
 
