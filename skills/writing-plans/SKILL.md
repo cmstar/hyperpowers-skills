@@ -71,6 +71,12 @@ docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md
 
 **Tech Stack：**[关键技术与 libraries]
 
+## Global Constraints
+
+[spec 中适用于整个项目的要求——版本下限、依赖限制、命名与文案规则、
+平台要求——每项单独一行；精确值逐字复制自 spec。每个 Task 的要求
+均隐式包含本节。]
+
 ---
 ```
 
