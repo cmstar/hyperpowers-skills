@@ -307,7 +307,7 @@ flowchart TD
    - 只执行 plan 明确写出的 commit 步骤。
 
 3. **明确不提交**
-   - 跳过 plan 中所有 commit 指令；
+   - 跳过 plan 中所有 commit 步骤；
    - 保留实现、测试和验证步骤；
    - 最终代码保持未提交。
 

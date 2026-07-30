@@ -117,13 +117,14 @@ Expected: PASS
 
 - [ ] **Step 5：提交当前 Task**
 
-```bash
-git add tests/path/test.py src/path/file.py
-git commit -m "feat: add specific feature"
+建议提交信息：
+
+```text
+feat: add specific feature
 ```
 ````
 
-计划中的 commit 步骤必须保留。计划执行时，用户可在执行技能的集中确认面板中明确覆盖提交策略。
+计划中的 commit 步骤和具体提交信息建议必须保留，但不得写出 `git add`、`git commit` 等提交命令。计划执行时，用户可在执行技能的集中确认面板中明确覆盖提交策略。
 
 ## 不得使用占位符
 
@@ -135,7 +136,7 @@ git commit -m "feat: add specific feature"
 - “与 Task N 类似”，要求执行者自行补全；
 - 代码步骤只说做什么，却不给出如何做；
 - 引用从未定义的 types、functions、methods 或 file paths；
-- 缺少准确命令或预期结果。
+- 需要运行的测试或验证步骤缺少准确命令或预期结果。
 
 ## 自审
 
@@ -145,7 +146,7 @@ git commit -m "feat: add specific feature"
 2. **占位符：**是否存在模糊、延期或缺失的实现内容？
 3. **接口一致性：**后续任务使用的名称和签名是否与前面定义一致？
 4. **可构建性：**执行者是否能仅凭计划和代码库完成每一步？
-5. **提交边界：**每个顶层 Task 是否在验证后有一个明确 commit？
+5. **提交边界：**每个顶层 Task 是否在验证后给出提交步骤和具体提交信息建议，且没有写出具体 Git 命令？
 
 发现问题时内联修复。自审不调用其他技能。
 
