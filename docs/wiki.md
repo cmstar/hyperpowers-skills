@@ -152,6 +152,7 @@ brainstorming 的价值在于澄清和审阅，不在于替用户决定下一步
 - 在实施前先检查 Git、branch 和工作区状态；
 - 一次性展示需要用户决定的维度；
 - 根据输入类型提供不同的 commit、拆解和 sub-agent 策略；
+- 只有用户选择明确写有 `git-auto-commit` 的提交策略后，才在相应边界调用该技能；
 - TDD 只有被明确选择时才调用；
 - sub-agent 使用当前 Agent 的原生能力，不再依赖单独的调度 Skill；
 - 完成后只验证和报告，不自动进入 merge、push、PR 或清理流程。
@@ -222,7 +223,7 @@ Skill 是行为程序，需要通过真实行为测试验证；但测试方法�
 - 根据实际改动判断是否需要 Body 或 breaking change 信息；
 - 暂存已确认的范围并创建一次 Git commit。
 
-它只接受对 `git-auto-commit` 的明确调用。普通提交请求不会触发它；当前版本也没有把它接入其他技能或精简版主工作流程。
+它只接受对 `git-auto-commit` 的明确调用。用户可以直接点名使用，也可以在 `executing-spec-or-plan` 的集中确认面板中选择明确写有该名称的提交策略；普通提交请求、plan 中的 commit 步骤或提交信息建议本身都不会触发它。
 
 ## 技能之间的关系
 
@@ -234,6 +235,7 @@ flowchart LR
     B -->|"用户明确选择"| E["executing-spec-or-plan"]
     P -->|"用户明确选择"| E
     E -->|"用户明确选择 TDD 模式"| T["test-driven-development"]
+    E -->|"用户明确选择带名称的提交策略"| G["git-auto-commit"]
     W["writing-skills"] -. "方法论相关，但独立运行" .-> T
 ```
 
@@ -243,8 +245,10 @@ flowchart LR
 | `brainstorming` | `executing-spec-or-plan` | 用户明确选择直接执行 spec |
 | `writing-plans` | `executing-spec-or-plan` | 用户明确选择执行 plan |
 | `executing-spec-or-plan` | `test-driven-development` | 用户明确选择 TDD Skill 模式 |
+| `executing-spec-or-plan` | `git-auto-commit` | 用户明确选择写有该名称的提交策略 |
 | `writing-skills` | 无必需目标 | 只说明与 TDD 共享方法论 |
 | `test-driven-development` | 无 | 独立执行 TDD 纪律 |
+| `git-auto-commit` | 无 | 独立完成一次提交 |
 
 ## 精简版主工作流程
 
@@ -292,7 +296,7 @@ flowchart TD
 | 决策维度 | 用户在决定什么 | 对执行的影响 |
 |---|---|---|
 | 执行位置 | 当前分支、新分支或 worktree | 决定代码写入哪里，以及是否创建新的 Git 工作区 |
-| 提交策略 | 按 Task/关键步骤提交、遵循 plan，或不提交 | 决定 Agent 是否执行 Git commit，以及提交边界 |
+| 提交策略 | 使用 `git-auto-commit` 按 Task/关键步骤提交、遵循 plan，或不提交 | 决定是否显式授权该技能，以及提交边界 |
 | TDD 模式 | 明确使用 TDD Skill，或不调用 | 决定是否强制执行“先失败测试、再最小实现”的完整纪律 |
 | 任务拆解 | 展示关键步骤并确认，或由 Agent 自主 | 决定用户是否在编码前审阅执行步骤 |
 | sub-agent 策略 | 强制使用、Agent 判断或禁止使用 | 决定任务是否交给原生 sub-agent 调度 |
@@ -307,25 +311,28 @@ flowchart TD
 | 维度 | 选项 |
 |---|---|
 | 执行位置 | 当前分支／新分支／worktree |
-| 提交策略 | 强制每个顶层 Task 提交／遵循 plan／明确不提交 |
+| 提交策略 | 使用 `git-auto-commit` 强制每个顶层 Task 提交／使用 `git-auto-commit` 遵循 plan／明确不提交 |
 | sub-agent | 强制使用／Agent 判断／禁止使用 |
 | TDD | 使用 `test-driven-development`／不调用 |
 | Git 初始化 | 仅在非 Git 目录且提交策略需要 commit 时出现 |
 
 ### 提交策略的三种含义
 
-1. **强制每个顶层 Task 提交**
+1. **使用 `git-auto-commit` 强制每个顶层 Task 提交**
    - 每个 Task 完成并验证后提交一次；
    - 即使 plan 没写 commit，也按 Task 边界提交；
    - 没有文件变化的 Task 不创建空 commit。
 
-2. **遵循 plan**
-   - 只执行 plan 明确写出的 commit 步骤。
+2. **使用 `git-auto-commit` 遵循 plan**
+   - 只在 plan 明确写出的 commit 边界调用；
+   - plan 给出的提交信息只是语义建议，最终信息由该技能根据实际 diff、项目规则和近期历史生成。
 
 3. **明确不提交**
    - 跳过 plan 中所有 commit 步骤；
    - 保留实现、测试和验证步骤；
    - 最终代码保持未提交。
+
+选择前两项本身就是对 `git-auto-commit` 的显式授权，并覆盖本次执行中符合所选策略的全部提交边界，不需要逐次确认提交信息。
 
 ### TDD 与 plan 冲突
 
@@ -345,7 +352,7 @@ flowchart TD
     K -->|"是"| R["用户选择调整顺序、保持 plan 或暂停"]
     K -->|"否"| T["按 plan 顺序执行顶层 Tasks"]
     R -->|"允许执行"| T
-    T --> V["逐 Task 验证并按策略提交"]
+    T --> V["逐 Task 验证并按策略调用 git-auto-commit"]
     V --> F["最终验证与精简报告"]
 ```
 
@@ -361,9 +368,11 @@ flowchart TD
 |---|---|
 | 执行位置 | 当前分支／新分支／worktree |
 | 任务拆解 | 展示关键步骤并确认／完全由 Agent 自主 |
-| 提交策略 | 每个关键步骤提交／明确不提交 |
+| 提交策略 | 使用 `git-auto-commit` 在每个关键步骤后提交／明确不提交 |
 | TDD | 使用 `test-driven-development`／不调用 |
 | Git 初始化 | 仅在必要时出现 |
+
+选择第一项即显式授权 `executing-spec-or-plan` 在本次执行的每个关键步骤完成并验证后调用一次 `git-auto-commit`，不需要逐次确认提交信息；选择“明确不提交”时不加载该技能。没有文件变化的步骤不会创建空 commit。
 
 ### 如果选择完全由 Agent 自主
 
@@ -403,7 +412,7 @@ flowchart TD
     U -->|"未批准"| L
     U -->|"批准"| E["执行关键步骤"]
     A --> E
-    E --> V["按策略验证与提交"]
+    E --> V["验证并按策略调用 git-auto-commit"]
     V --> F["最终验证与精简报告"]
 ```
 
@@ -417,6 +426,7 @@ flowchart TD
 - worktree 只有用户明确选择时创建；
 - 非 Git 目录中，只有用户要求 commit 才询问是否初始化；
 - 没有有效 HEAD 时，不为了 worktree 擅自创建 bootstrap commit；
+- 只有用户选择写有 `git-auto-commit` 的提交策略，执行器才在已授权边界调用该技能；
 - TDD 不得删除 legacy code、用户修改或来源不明的实现；
 - 平台不支持强制选择的 sub-agent 能力时，必须报告而不能假装执行。
 
