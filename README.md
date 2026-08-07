@@ -39,7 +39,7 @@ Hyperpowers 与原版 Superpowers 不能同时安装。两者包含多个同名 
 |---|---|
 | `brainstorming` | 通过澄清问题、方案比较和用户审阅，把模糊想法整理成已批准的规格说明书（spec）。 |
 | `writing-plans` | 把已批准的 spec 或明确 requirements 转换成包含文件、步骤、测试、验证和提交边界的实施计划。 |
-| `executing-spec-or-plan` | 执行完整 plan，或跳过正式计划文档直接执行已批准 spec；实施前集中确认执行策略及平台支持时的 sub-agent 模型。 |
+| `executing-spec-or-plan` | 执行完整 plan，或跳过正式计划文档直接执行已批准 spec；实施前集中确认执行策略及平台支持时的 sub-agent 模型与推理强度。 |
 | `test-driven-development` | 使用 RED–GREEN–REFACTOR 循环执行代码变更，并保护 legacy code 与用户已有修改。 |
 | `writing-skills` | 使用 fresh-context 行为测试创建、更新和验证 Agent Skills。 |
 
@@ -69,7 +69,9 @@ Hyperpowers 与原版 Superpowers 不能同时安装。两者包含多个同名 
    - 使用 `executing-spec-or-plan` 直接执行 spec；
    - 到此结束。
 3. 如果生成了 plan，可选择提交文档、执行 plan，或保持未提交并结束。
-4. 执行前，由用户决定执行位置、提交策略、TDD 模式以及是否使用 sub-agent；若平台支持为 sub-agent 单独指定模型，还需选择继承当前会话模型或某个可用模型。选择带有 `git-auto-commit` 名称的提交策略即授权按相应边界提交。
+4. 执行前，由用户决定执行位置、提交策略、TDD 模式以及是否使用 sub-agent；若平台支持为 sub-agent 单独指定模型或推理强度，还需分别选择本次执行统一使用的选项。选择带有 `git-auto-commit` 名称的提交策略即授权按相应边界提交。
+
+模型与推理强度的首项都叫“默认”：派遣时优先遵守 `AGENTS.md`、平台配置等现有规则；没有额外指定时才与当前会话相同。
 5. 实施完成后执行最终验证，并报告 commits、未提交文件、branch 和 worktree 状态。
 
 `writing-skills` 是一项独立的元技能，用于维护 Skill 本身，不属于每次开发任务都必须经过的主流程。
@@ -102,7 +104,7 @@ Hyperpowers 采用以下原则：
 - **技能解耦**：一个 Skill 可以建议另一个 Skill，但不能强制调用。
 - **保留退出路径**：设计、计划和执行阶段都允许用户在明确节点结束流程。
 - **提交可控**：文档生成和代码执行不会把“完成”自动等同于 Git commit；执行器只在用户明确选择 `git-auto-commit` 提交策略后提交。
-- **执行前集中确认**：在实施 plan 或 spec 前，一次性收集执行位置、提交、TDD、任务拆解和 sub-agent 等决策；仅在平台支持时收集 sub-agent 模型。
+- **执行前集中确认**：在实施 plan 或 spec 前，一次性收集执行位置、提交、TDD、任务拆解和 sub-agent 等决策；仅在平台支持时收集 sub-agent 模型与推理强度。
 - **保留核心纪律**：详细计划、RED–GREEN–REFACTOR、验证和安全边界仍然保留。
 
 ## 深入文档
