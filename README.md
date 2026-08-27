@@ -39,7 +39,7 @@ Hyperpowers 与原版 Superpowers 不能同时安装。两者包含多个同名 
 |---|---|
 | `brainstorming` | 通过澄清问题、方案比较和用户审阅，把模糊想法整理成已批准的规格说明书（spec）。 |
 | `writing-plans` | 把已批准的 spec 或明确 requirements 转换成包含文件、步骤、测试、验证和提交边界的实施计划。 |
-| `executing-spec-or-plan` | 执行完整 plan，或跳过正式计划文档直接执行已批准 spec；实施前集中确认执行策略及平台支持时的 sub-agent 模型与推理强度。 |
+| `executing-spec-or-plan` | 执行完整 plan，或跳过正式计划文档直接执行已批准 spec；实施前集中确认执行策略，解释任务拆解与 TDD 的建议依据，并在平台支持时确认 sub-agent 模型与推理强度。 |
 | `test-driven-development` | 使用 RED–GREEN–REFACTOR 循环执行代码变更，并保护 legacy code 与用户已有修改。 |
 | `writing-skills` | 使用 fresh-context 行为测试创建、更新和验证 Agent Skills。 |
 
